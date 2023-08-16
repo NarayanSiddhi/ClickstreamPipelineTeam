@@ -6,16 +6,13 @@ import org.apache.spark.sql.functions._
 object ConvertToLowercase {
 
   //convert everything to lowercase
-  def convertToLowercase(df: DataFrame, column: String): DataFrame = {
-    df.withColumn(column, lower(col(column)))
-  }
+  def convertToLowercase(): (DataFrame,DataFrame) = {
 
-  def main():(DataFrame,DataFrame)= {
+    val (df1Duplicates,df2Duplicates)=RemoveDuplicate.removeDuplicates()
 
-    val (df1Duplicates,df2Duplicates)=RemoveDuplicate.main()
-    val df1lowercase = convertToLowercase(df1Duplicates, "redirection_source_t")
-    val df2lowercase = convertToLowercase(df2Duplicates, "department_n")
-
+    val df1lowercase = df1Duplicates.withColumn("redirection_source_t", lower(col("redirection_source_t")))
+    val df2lowercase = df2Duplicates.withColumn("department_n", lower(col("department_n")))
     (df1lowercase,df2lowercase)
   }
+
 }

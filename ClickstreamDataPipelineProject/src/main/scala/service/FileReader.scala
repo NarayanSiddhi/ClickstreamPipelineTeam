@@ -3,6 +3,7 @@ package service
 import com.typesafe.config.ConfigFactory
 import org.apache.spark.SparkConf
 import org.apache.spark.sql._
+import utils.sparksession
 
 object FileReader{
 
@@ -14,18 +15,17 @@ object FileReader{
     new SparkConf().setAppName(sparkAppName).setMaster(sparkMaster)
   }
 
-  def readDataFrame(spark: SparkSession, inputPath: String): DataFrame = {
-    spark.read.option("header", "true").option("inferSchema", "true").csv(inputPath)
-  }
+  def readDataFrame(): (DataFrame,DataFrame) = {
+//    spark.read.option("header", "true").option("inferSchema", "true").csv(inputPath)
 
-//  def main(args: Array[String]) {
-//    val spark = SparkSession.builder.master("local[*]").appName("FileReader").getOrCreate()
-//    //    val ssc = new StreamingContext(spark.sparkContext, Seconds(10))
-//    val sc = spark.sparkContext
-//    sc.setLogLevel("ERROR")
-//    import spark.implicits._
-//    import spark.sql
-//
-//    spark.stop()
-//  }
+    val spark=sparksession.sparkSession()
+
+    val inputPath1 = ConfigFactory.load("application.conf").getString("input.path1")
+    val inputPath2 = ConfigFactory.load("application.conf").getString("input.path2")
+
+    val df1 = spark.read.option("header", "true").option("inferSchema", "true").csv(inputPath1)
+    val df2 = spark.read.option("header", "true").option("inferSchema", "true").csv(inputPath2)
+
+    (df1,df2)
+  }
 }

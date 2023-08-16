@@ -2,15 +2,14 @@ package service
 
 import com.typesafe.config.ConfigFactory
 import org.apache.spark.sql._
-import org.apache.spark.sql.functions._
 import transform.ConvertToLowercase
 
 object FileWriter {
 
   //write output file to a folder
-  def main() {
+  def fileWriter(): Unit = {
 
-    val (df1lowercase,df2lowercase)=ConvertToLowercase.main()
+    val (df1lowercase,df2lowercase)=ConvertToLowercase.convertToLowercase()
     // Print both schemas
     df1lowercase.printSchema()
     df2lowercase.printSchema()

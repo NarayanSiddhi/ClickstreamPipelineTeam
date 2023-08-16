@@ -1,15 +1,15 @@
 package transform
 
-import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.functions._
-import service.DataPipeline
+import service.{DataPipeline, FileReader}
 
 object CastDatatypes {
 
   //cast columns to desired datatypes
   def castDatatypes(): (DataFrame,DataFrame) = {
 
-    val (df1,df2)=DataPipeline.dataPipeline()
+    val (df1,df2)=FileReader.readDataFrame()
 
     val df1cast: DataFrame = df1.withColumn("event_timestamp",
       to_timestamp(col("event_timestamp"), "MM/dd/yyyy HH:mm"))
