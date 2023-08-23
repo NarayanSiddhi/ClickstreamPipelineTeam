@@ -1,12 +1,9 @@
-import database.DatabaseWrite
-import service.{DataPipeline, FileReader, FileWriter}
-
-import java.sql.Connection
-import java.sql.DriverManager
+import service.DataPipeline
 
 object ClickstreamPipeLine {
   def main(args: Array[String]): Unit = {
+    // main class where the flow of the code starts
+    // first call DataPipeline object
     DataPipeline.dataPipeline()
-
   }
 }
