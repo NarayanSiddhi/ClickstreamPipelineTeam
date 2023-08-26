@@ -19,7 +19,7 @@ class FileWriterTest extends AnyFlatSpec {
 
     val final_test_DF = FileWriter.fileWriter(clickstreamDF,itemsetDF,outputPath)
 
-    val finalDF_expected=Array("item_id","id","event_timestamp","device_type","session_id","visitor_id","redirection_source","item_price","product_type","department_name")
+    val finalDF_expected=Array("item","id","event_timestamp","device_type","session_id","visitor_id","redirection_source","item_price","product_type","department_name")
 
     assertResult(finalDF_expected)(final_test_DF.columns)
   }

@@ -1,33 +1,55 @@
 package transform
 
+import com.typesafe.config.ConfigFactory
 import org.apache.spark.sql._
+import org.apache.spark.sql.functions.{col, current_timestamp}
+import service.DataPipeline
 
 object NullCheck {
-  def nullCheck(df1cast:DataFrame,df2cast:DataFrame):(DataFrame,DataFrame)={
-    // initializing the dataframes to null
-    var df1notnull: DataFrame = null
-    var df2notnull: DataFrame = null
+  def nullCheck(df1cast:DataFrame,df2cast:DataFrame,nullPathClickstream:String,nullPathItemset:String):(DataFrame,DataFrame)={
 
     try {
       // drop the records where "id" and "item_id" are null
       val df1notnull = df1cast.na.drop(Seq("id"))
       val df2notnull = df2cast.na.drop(Seq("item_id"))
 
-      return (df1notnull, df2notnull)
+      // defining placeholders for both datasets where null values are present
+      val placeholderClickstream = Map(
+        "id" -> " ",
+        "event_timestamp" -> "%",
+        "device_type" -> "%",
+        "session_id" -> "%",
+        "visitor_id" -> "%",
+        "item_id" -> "%",
+        "redirection_source" -> "%"
+      )
+      val placeholderItemset = Map(
+        "item_id" -> " ",
+        "item_price" -> 0.0,
+        "product_type" -> "%",
+        "department_name" -> "%"
+      )
+
+      // filling all null values with defined placeholders
+      val replacedNullClickstream = df1notnull.na.fill(placeholderClickstream)
+      val replacedNullItemset = df2notnull.na.fill(placeholderItemset)
+      replacedNullClickstream.show()
+      replacedNullItemset.show()
+
+      // store the null records in dataframes and into
+      val nullRecordsClickstream = df1cast.filter(col("id").isNull)
+      val nullRecordsItemset = df2cast.filter(col("item_id").isNull)
+
+      nullRecordsClickstream.repartition(1).write.mode("overwrite").option("header","true").csv(nullPathClickstream)
+      nullRecordsItemset.repartition(1).write.mode("overwrite").option("header","true").csv(nullPathItemset)
+
+      (replacedNullClickstream,replacedNullItemset)
     }
     catch {
-      case ex: Exception => println(s"An exception occurred: ${ex.getMessage}")
+      case ex: Exception =>
+        DataPipeline.logger.error("An error occured due to null removel.",ex)
 
-        // giving null values to both dataframes if exception occured
-        df1notnull = null
-        df2notnull = null
-    }
-
-    // if the dataframes are not null return them otherwise return null
-    if (df1notnull != null && df2notnull != null) {
-      (df1notnull, df2notnull)
-    } else {
-      (null, null)
+        (df1cast,df2cast)
     }
   }
 }

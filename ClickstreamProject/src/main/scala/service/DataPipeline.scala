@@ -2,11 +2,13 @@ package service
 
 import com.typesafe.config.ConfigFactory
 import database.DatabaseWrite
+import org.slf4j.{Logger, LoggerFactory}
 import transform.{CastDataTypes, ConvertToLowercase, NullCheck, RemoveDuplicates, RenameColumn}
 import utils.sparksession
 
 // here the main execution of pipeline starts
 object DataPipeline {
+  val logger: Logger = LoggerFactory.getLogger(getClass)
   def dataPipeline():Unit={
     // calling sparksession object to build SparkSession
     val spark=sparksession.sparkSession()
@@ -17,6 +19,10 @@ object DataPipeline {
 
     // Write processed data to output path
     val outputPath = ConfigFactory.load("application.conf").getString("output.path")
+    val nullPathClickstream = ConfigFactory.load("application.conf").getString("output.nullClickstream")
+    val nullPathItemset = ConfigFactory.load("application.conf").getString("output.nullItemset")
+    val duplicatesPathClickstream = ConfigFactory.load("application.conf").getString("output.duplicateClickstream")
+    val duplicatesPathItemset = ConfigFactory.load("application.conf").getString("output.duplicateItemset")
 
     // calling FileReader to read both input files
     val clickstream_DF=FileReader.readDataFrame(spark,inputPath_clickstream)
@@ -26,10 +32,10 @@ object DataPipeline {
     val (df1cast,df2cast)=CastDataTypes.castDataTypes(clickstream_DF,itemSet_DF)
 
     // calling NullCheck object to remove columns where null values are present
-    val (df1removenull,df2removenull)=NullCheck.nullCheck(df1cast,df2cast)
+    val (df1removenull,df2removenull)=NullCheck.nullCheck(df1cast,df2cast,nullPathClickstream,nullPathItemset)
 
     // calling RemoveDuplicates object to remove the columns where duplicate values are present
-    val (df1duplicates,df2duplicates)=RemoveDuplicates.removeDuplicates(df1removenull,df2removenull)
+    val (df1duplicates,df2duplicates)=RemoveDuplicates.removeDuplicates(df1removenull,df2removenull,duplicatesPathClickstream,duplicatesPathItemset)
 
     // calling ConvertToLowercase object to convert all records of a particular column to lowercase
     val (df1lowercase,df2lowercase)=ConvertToLowercase.convertToLowercase(df1duplicates,df2duplicates)

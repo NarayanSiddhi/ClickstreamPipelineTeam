@@ -1,5 +1,6 @@
 package transform
 
+import com.typesafe.config.ConfigFactory
 import org.apache.spark.sql.DataFrame
 import org.scalatest._
 import org.scalatest.flatspec.AnyFlatSpec
@@ -11,7 +12,10 @@ class RemoveDuplicatesTest extends AnyFlatSpec {
 
   it should "remove duplicate values" in{
     val (clickstreamDF, itemsetDF) = spark_readDF_config_test.readTestDF()
-    val (df1removeduplicates, df2removeduplicates) = RemoveDuplicates.removeDuplicates(clickstreamDF, itemsetDF)
+    val duplicatesPathClickstream = ConfigFactory.load("test_application.conf").getString("output.sampleDuplicateClickstream")
+    val duplicatesPathItemset = ConfigFactory.load("test_application.conf").getString("output.sampleDuplicateItemset")
+
+    val (df1removeduplicates, df2removeduplicates) = RemoveDuplicates.removeDuplicates(clickstreamDF, itemsetDF, duplicatesPathClickstream, duplicatesPathItemset)
 
     assertResult(9)(df1removeduplicates.select("id").count())
     assertResult(8)(df2removeduplicates.select("item_id").count())

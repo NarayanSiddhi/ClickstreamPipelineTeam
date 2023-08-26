@@ -3,6 +3,7 @@ package service
 import com.typesafe.config.ConfigFactory
 import org.apache.spark.SparkConf
 import org.apache.spark.sql._
+import service.DataPipeline
 
 object FileReader {
 
@@ -21,11 +22,8 @@ object FileReader {
       dataframe
     } catch {
       case e: Exception =>
-        println(s"An error occurred while reading the DataFrame from $inputpath:")
-        e.printStackTrace()
-        // we can handle the error here, such as returning an empty DataFrame or rethrowing the exception
-        // Returning an empty DataFrame as an example
-        spark.emptyDataFrame
+        DataPipeline.logger.error("An error occurred during reading the files",e)
+        null
     }
   }
 }

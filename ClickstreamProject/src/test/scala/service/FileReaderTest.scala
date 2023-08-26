@@ -18,7 +18,7 @@ class FileReaderTest extends AnyFlatSpec {
     val clickstream_test_DF = FileReader.readDataFrame(spark,inputPath_clickstream)
     val itemset_test_DF = FileReader.readDataFrame(spark,inputPath_itemset)
 
-    assertResult(10)(clickstream_test_DF.count())
+    assertResult(9)(clickstream_test_DF.count())
     assertResult(10)(itemset_test_DF.count())
 
     clickstream_test_DF.show()

@@ -13,10 +13,10 @@ class RenameColumnTest extends AnyFlatSpec {
     val (clickstreamDF, itemsetDF) = spark_readDF_config_test.readTestDF()
     val (df1rename, df2rename) = RenameColumn.renameColumn(clickstreamDF, itemsetDF)
 
-    val clickstream_expected=Array("Entity_id","event_timestamp","device_type_t","visitor_session_c","visitor_id","item_id","redirection_source_t")
+    val clickstreamExpected=Array("Entity_id","event_timestamp","device_type_t","visitor_session_c","visitor_id","item_id","redirection_source_t")
     val itemset_expected=Array("item_id","item_unit_price_a","product_type_c","department_n")
 
-    assertResult(clickstream_expected)(df1rename.columns)
+    assertResult(clickstreamExpected)(df1rename.columns)
     assertResult(itemset_expected)(df2rename.columns)
 
     df1rename.show()
