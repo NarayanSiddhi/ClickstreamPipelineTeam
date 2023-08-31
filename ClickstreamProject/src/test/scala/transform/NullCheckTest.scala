@@ -1,27 +1,30 @@
 package transform
 
 import com.typesafe.config.ConfigFactory
-import org.apache.spark.sql.DataFrame
-import org.scalatest._
 import org.scalatest.flatspec.AnyFlatSpec
-import utils.spark_readDF_config_test
+import utils.sparkReadConfig
 
 class NullCheckTest extends AnyFlatSpec {
 
   "NullCheck object" should "do the following"
 
   it should "remove null values" in{
-    val (clickstreamDF, itemsetDF) = spark_readDF_config_test.readTestDF()
+    // Reading the dataframes
+    val (clickstreamDataframe, itemsetDataframe) = sparkReadConfig.readTestDataframe()
 
+    // Loading configuration files
     val nullPathClickstream = ConfigFactory.load("test_application.conf").getString("output.sampleNullClickstream")
     val nullPathItemset = ConfigFactory.load("test_application.conf").getString("output.sampleNullItemset")
 
-    val (df1removenull, df2removenull) = NullCheck.nullCheck(clickstreamDF, itemsetDF, nullPathClickstream, nullPathItemset)
+    // Calling the NullCheck object
+    val (clickstreamRemoveNull, itemsetRemoveNull) = NullCheck.nullCheck(clickstreamDataframe, itemsetDataframe, nullPathClickstream, nullPathItemset)
 
-    assertResult(9)(df1removenull.select("id").count())
-    assertResult(10)(df2removenull.select("item_id").count())
+    // Asserting the null records
+    assertResult(10)(clickstreamRemoveNull.select("id").count())
+    assertResult(11)(itemsetRemoveNull.select("item_id").count())
 
-    df1removenull.show()
-    df2removenull.show()
+    // Show the datasets
+    clickstreamRemoveNull.show()
+    itemsetRemoveNull.show()
   }
 }

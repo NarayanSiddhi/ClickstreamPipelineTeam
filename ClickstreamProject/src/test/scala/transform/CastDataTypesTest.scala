@@ -1,9 +1,7 @@
 package transform
 
-import org.apache.spark.sql.DataFrame
-import org.scalatest._
 import org.scalatest.flatspec.AnyFlatSpec
-import utils.spark_readDF_config_test
+import utils.sparkReadConfig
 import org.apache.spark.sql.types.{StringType,TimestampType, DoubleType}
 
 class CastDataTypesTest extends AnyFlatSpec {
@@ -11,18 +9,31 @@ class CastDataTypesTest extends AnyFlatSpec {
   "CastDataTypes object" should "do the following"
 
   it should "cast datatypes of columns to desired datatypes" in{
-    val (clickstreamDF,itemsetDF)=spark_readDF_config_test.readTestDF()
-    val (df1cast,df2cast) = CastDataTypes.castDataTypes(clickstreamDF,itemsetDF)
+    // Reading the dataframes
+    val (clickstreamDataframe,itemsetDataframe)=sparkReadConfig.readTestDataframe()
+    // Calling the CastDataTypes object
+    val (clickstreamCast,itemsetCast) = CastDataTypes.castDataTypes(clickstreamDataframe,itemsetDataframe)
 
-    val str=df1cast.schema("event_timestamp").dataType
-    val double=df2cast.schema("item_price").dataType
+    // Defining the datatypes
+    val str=clickstreamCast.schema("event_timestamp").dataType
+    val double=itemsetCast.schema("item_price").dataType
+
     // Assert datatype for timestamp column using assertResult
-    assertResult(str)(StringType)
+    assertResult(str)(TimestampType)
 
     // Assert datatype for double column using assertResult
     assertResult(double)(DoubleType)
 
-//    df1cast.show()
-//    df2cast.show()
+    // Printing the schemas
+    println("The schemas of Clickstream Dataset:")
+    clickstreamCast.printSchema()
+    println("The schemas of Item Dataset:")
+    itemsetCast.printSchema()
+
+    // Printing the datasets
+    println("The Clickstream Dataset:")
+    clickstreamCast.show()
+    println("The Item Dataset:")
+    itemsetCast.show()
   }
 }

@@ -1,17 +1,16 @@
 package transform
 
 import org.apache.spark.sql._
-import org.apache.spark.sql.functions.{col, current_timestamp}
-import service.DataPipeline
+import org.apache.spark.sql.functions.col
 import org.apache.spark.internal.Logging
 
 object NullCheck extends Logging {
-  def nullCheck(df1cast:DataFrame,df2cast:DataFrame,nullPathClickstream:String,nullPathItemset:String):(DataFrame,DataFrame)={
+  def nullCheck(clickstreamCast:DataFrame,itemsetCast:DataFrame,nullPathClickstream:String,nullPathItemset:String):(DataFrame,DataFrame)={
 
     try {
       // drop the records where "id" and "item_id" are null
-      val df1notnull = df1cast.na.drop(Seq("id"))
-      val df2notnull = df2cast.na.drop(Seq("item_id"))
+      val clickstreamNotNull = clickstreamCast.na.drop(Seq("id"))
+      val itemsetNotNull = itemsetCast.na.drop(Seq("item_id"))
 
       // defining placeholders for both datasets where null values are present
       val placeholderClickstream = Map(
@@ -30,16 +29,15 @@ object NullCheck extends Logging {
         "department_name" -> "%"
       )
 
-      // filling all null values with defined placeholders
-      val replacedNullClickstream = df1notnull.na.fill(placeholderClickstream)
-      val replacedNullItemset = df2notnull.na.fill(placeholderItemset)
-      replacedNullClickstream.show()
-      replacedNullItemset.show()
+      // filling all null values in other columns with defined placeholders
+      val replacedNullClickstream = clickstreamNotNull.na.fill(placeholderClickstream)
+      val replacedNullItemset = itemsetNotNull.na.fill(placeholderItemset)
 
-      // store the null records in dataframes and into
-      val nullRecordsClickstream = df1cast.filter(col("id").isNull)
-      val nullRecordsItemset = df2cast.filter(col("item_id").isNull)
+      // store the null records in dataframes and into error csv files
+      val nullRecordsClickstream = clickstreamCast.filter(col("id").isNull)
+      val nullRecordsItemset = itemsetCast.filter(col("item_id").isNull)
 
+      // write the filtered records into the error files
       nullRecordsClickstream.repartition(1).write.mode("overwrite").option("header","true").csv(nullPathClickstream)
       nullRecordsItemset.repartition(1).write.mode("overwrite").option("header","true").csv(nullPathItemset)
 
@@ -48,8 +46,8 @@ object NullCheck extends Logging {
     catch {
       case ex: Exception =>
         logInfo("An error occured due to null removel.",ex)
-
-        (df1cast,df2cast)
+        // return the original dataframes
+        (clickstreamCast,itemsetCast)
     }
   }
 }

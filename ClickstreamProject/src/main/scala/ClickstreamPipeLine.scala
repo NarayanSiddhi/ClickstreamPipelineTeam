@@ -13,7 +13,10 @@ object ClickstreamPipeLine extends Logging {
   def main(args: Array[String]): Unit = {
     try
     {
-      // main class where the flow of the code starts
+      // main method where the flow of the code starts
+      val JOB_START_TIME: String = LocalDateTime.now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"))
+      logInfo("Clickstream Data Pipeline Process: Beginning  :  " + JOB_START_TIME)
+
       // read the configuration file from command line arguments
       val configPath = "C:\\ClickstreamProject\\src\\main\\resources\\clickstreamLocalConfig.conf"
       // val configPath = args(0)
@@ -22,15 +25,17 @@ object ClickstreamPipeLine extends Logging {
 
       // initiating the application constants based on configuration files
       val appConstants : ApplicationConstants = new ApplicationConstants()
+      logInfo("Hello")
 
       // creating spark session- begin
       val sparkAppName = applicationConf.getString(appConstants.SPARK_APPNAME)
       val sparkMaster = applicationConf.getString(appConstants.SPARK_MASTER)
       val sparkConf = new SparkConf().setAppName(sparkAppName).setMaster(sparkMaster)
+      logInfo(s"This is $sparkConf")
 
       val sparkSession = sparksession.sparkSession(sparkConf,applicationConf,appConstants)
       val sparkAppID = sparkSession.sparkContext.applicationId
-      logInfo("sparkAppID  :  " + sparkAppID)
+      logInfo("This is the sparkAppID  :  " + sparkAppID)
       // creating spark session- end
 
       // DataPipeline execution begin
@@ -38,6 +43,7 @@ object ClickstreamPipeLine extends Logging {
 
       val JOB_END_TIME: String = LocalDateTime.now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"))
       logInfo("Clickstream Data Pipeline Process: Completed  :  " + JOB_END_TIME)
+      // Pipeline execution ends
     }
     catch {
       case e: Exception=>

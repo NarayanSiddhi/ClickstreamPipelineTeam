@@ -6,16 +6,15 @@ import constants.ApplicationConstants
 
 object ClickstreamItemPrice {
 
-  def clickstreamItemPrice(dfWithPrices: DataFrame, invalidPrice:String): Unit = {
-    val appConstants = new ApplicationConstants
-    val lowerLimit = 0.0 // Replace with your lower limit
-    val upperLimit = appConstants.DQ_ITEM_PRICE_THRESHOLD  // Replace with your upper limit
+  def clickstreamItemPrice(dfWithPrices: DataFrame, appConstants:ApplicationConstants, invalidPrice:String): Unit = {
+    val lowerLimit = appConstants.DQ_ITEM_PRICE_LOWER_THRESHOLD
+    val upperLimit = appConstants.DQ_ITEM_PRICE_UPPER_THRESHOLD
 
     // Filter out values outside the range (invalid data)
     val invalidData = dfWithPrices.filter(col("item_unit_price_a") < lowerLimit || col("item_unit_price_a") > upperLimit)
 
     // Save invalid data to a separate file (CSV format)
-    invalidData.write.mode("overwrite").option("header", "true").csv(invalidPrice)
+    invalidData.repartition(1).write.mode("overwrite").option("header", "true").csv(invalidPrice)
 
     // Summary of Price Range for valid data
     val minPrice = dfWithPrices.agg(min("item_unit_price_a")).collect()(0)(0)

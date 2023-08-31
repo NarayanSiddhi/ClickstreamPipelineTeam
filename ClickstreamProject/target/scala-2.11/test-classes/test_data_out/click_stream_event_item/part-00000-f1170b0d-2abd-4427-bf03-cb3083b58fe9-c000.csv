@@ -1,0 +1,10 @@
+item_id,id,event_timestamp,device_type,session_id,visitor_id,redirection_source,item_price,product_type,department_name
+B17543,"",11/15/2020 15:27,android,B000078,I7099,LinkedIn,1756.5,G822,Collectibles
+E9862,30385,11/15/2020 15:24,android,B000078,I7099,google,2016.0,G23,Apps & Games
+E9862,30385,11/15/2020 15:24,android,B000078,I7099,google,1434.0,I42,Baby
+B08843,30503,11/15/2020 15:27,android,B000078,I7099,"",9059.0,C537,Beauty
+B08843,30503,11/15/2020 15:27,android,B000078,I7099,"",476.5,H03,Apps & Games
+B08843,30503,11/15/2020 15:27,android,B000078,I7099,"",476.5,H03,Apps & Games
+I777,30702,11/15/2020 15:30,android,B000078,I7099,LinkedIn,1177.5,F264,""
+E0383,30284,11/15/2020 15:21,android,B000078,I7099,linkedin,412.5,B619,Apps & Games
+E0383,30284,11/15/2020 15:21,android,B000078,I7099,linkedin,412.5,B619,Apps & Games

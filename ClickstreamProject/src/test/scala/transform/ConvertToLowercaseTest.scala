@@ -1,23 +1,24 @@
 package transform
 
-import org.apache.spark.sql.DataFrame
-import org.scalatest._
 import org.scalatest.flatspec.AnyFlatSpec
-import utils.spark_readDF_config_test
-import org.apache.spark.sql.functions.{col, lower, upper}
+import utils.sparkReadConfig
 
 class ConvertToLowercaseTest extends AnyFlatSpec {
 
   "ConvertToLowercase object" should "do the following"
 
   it should "convert the specified column records to lowercase" in{
-    val (clickstreamDF, itemsetDF) = spark_readDF_config_test.readTestDF()
-    val (df1lowercase, df2lowercase) = ConvertToLowercase.convertToLowercase(clickstreamDF, itemsetDF)
+    // Reading the dataframes
+    val (clickstreamDataframe, itemsetDataframe) = sparkReadConfig.readTestDataframe()
+    // Calling ConvertToLowercase object
+    val (clickstreamLowercase, itemsetLowercase) = ConvertToLowercase.convertToLowercase(clickstreamDataframe, itemsetDataframe)
 
-    assertResult(10)(df1lowercase.select("redirection_source").count())
-    assertResult(10)(df2lowercase.select("department_name").count())
+    // Assert lowercase records
+    assertResult(12)(clickstreamLowercase.select("redirection_source").count())
+    assertResult(12)(itemsetLowercase.select("department_name").count())
 
-    df1lowercase.show()
-    df2lowercase.show()
+    // show the datasets
+    clickstreamLowercase.show()
+    itemsetLowercase.show()
   }
 }

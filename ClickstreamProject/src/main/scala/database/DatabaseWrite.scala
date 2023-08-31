@@ -1,19 +1,19 @@
 package database
 
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.Config
 import constants.ApplicationConstants
 import org.apache.spark.sql._
 import org.apache.spark.internal.Logging
 
-object DatabaseWrite extends Logging{
-  def writeToMySQL(dataFrame: DataFrame, tableName: String, config:Config, appConstants: ApplicationConstants): Unit = {
+object DatabaseWrite extends Logging {
+  def writeToMySQL(joinedDataFrame: DataFrame, tableName: String, config:Config, appConstants: ApplicationConstants): Unit = {
     try
     {
       val Url = config.getString(appConstants.JDBC_URL);
       val User = config.getString(appConstants.JDBC_USER);
       val Password = config.getString(appConstants.JDBC_PASSWORD);
 
-      dataFrame.write // initiates the process of writing the DataFrame to MySql
+      joinedDataFrame.write // initiates the process of writing the DataFrame to MySql
         .format("jdbc") // Sets writing format to JDBC
         .mode("overwrite") // Overwrites existing data in target
         .option("driver", "com.mysql.cj.jdbc.Driver") // Specifies MySQL JDBC driver

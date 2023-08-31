@@ -1,26 +1,27 @@
-package transform
+package service
 
 import com.typesafe.config.ConfigFactory
-import org.apache.spark.sql.DataFrame
-import org.scalatest._
 import org.scalatest.flatspec.AnyFlatSpec
-import service.FileWriter
-import utils.spark_readDF_config_test
+import utils.sparkReadConfig
 
 class FileWriterTest extends AnyFlatSpec {
 
   "FileWriter object" should "do the following"
 
   it should "join the two datasets" in{
-    val (clickstreamDF, itemsetDF) = spark_readDF_config_test.readTestDF()
+    // Reading the test Dataframes
+    val (clickstreamDataframe, itemsetDataframe) = sparkReadConfig.readTestDataframe()
 
-    // Write processed data to output path
+    // Loading the test configuration file
     val outputPath = ConfigFactory.load("test_application.conf").getString("output.sample_path")
+    
+    // Write processed data to output path by calling FileWriter object
+    val finalTestDataframe = FileWriter.fileWriter(clickstreamDataframe,itemsetDataframe,outputPath)
 
-    val final_test_DF = FileWriter.fileWriter(clickstreamDF,itemsetDF,outputPath)
+    // Defining the columns of final Dataframe as an array
+    val finalDataframeExpected=Array("item_id", "id", "event_timestamp", "device_type", "session_id", "visitor_id", "redirection_source", "item_price", "product_type", "department_name")
 
-    val finalDF_expected=Array("item","id","event_timestamp","device_type","session_id","visitor_id","redirection_source","item_price","product_type","department_name")
-
-    assertResult(finalDF_expected)(final_test_DF.columns)
+    // Asserting the final dataframe columns
+    assertResult(finalDataframeExpected)(finalTestDataframe.columns)
   }
 }

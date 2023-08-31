@@ -1,13 +1,10 @@
 package constants
 
-import com.typesafe.config.Config
-
 class ApplicationConstants extends Serializable {
-  //val APP_NAME: String =config.getString("app.name")
   val CLICKSTREAM_INPUT_PATH: String ="app.input.clickstreamPath"
   val ITEMSET_INPUT_PATH: String ="app.input.itemsetPath"
 
-  val JOINED_DATASET: String ="app.output.path"
+  val JOINED_DATASET: String ="app.output.joinedDatasetPath"
   val CLICKSTREAM_NULLS: String ="app.output.nullClickstream"
   val ITEMSET_NULLS: String ="app.output.nullItemset"
   val CLICKSTREAM_DUPLICATES: String ="app.output.duplicateClickstream"
@@ -23,6 +20,8 @@ class ApplicationConstants extends Serializable {
   val JDBC_USER: String ="app.jdbc.jdbcUser"
   val JDBC_PASSWORD: String ="app.jdbc.jdbcPassword"
 
-  val DQ_ITEM_PRICE_THRESHOLD=1000.0
-  val DQ_EVENT_TIMESTAMP_THRESHOLD="2023-12-31 23:59:59"
+  val DQ_ITEM_PRICE_LOWER_THRESHOLD="app.thresholdValue.itemPriceLowerlimit"
+  val DQ_ITEM_PRICE_UPPER_THRESHOLD="app.thresholdValue.itemPriceUpperlimit"
+  val DQ_EVENT_TIMESTAMP_LOWER_THRESHOLD="app.thresholdValue.eventTimestampLowerlimit"
+  val DQ_EVENT_TIMESTAMP_UPPER_THRESHOLD="app.thresholdValue.eventTimestampUpperlimit"
 }
