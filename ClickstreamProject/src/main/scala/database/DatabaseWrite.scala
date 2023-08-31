@@ -3,8 +3,9 @@ package database
 import com.typesafe.config.{Config, ConfigFactory}
 import constants.ApplicationConstants
 import org.apache.spark.sql._
+import org.apache.spark.internal.Logging
 
-object DatabaseWrite {
+object DatabaseWrite extends Logging{
   def writeToMySQL(dataFrame: DataFrame, tableName: String, config:Config, appConstants: ApplicationConstants): Unit = {
     try
     {
@@ -24,7 +25,7 @@ object DatabaseWrite {
       }
       catch {
         case e:Exception=>
-          Logger.log.error("An error occurred during loading the data to MySQL table",e)
+          logInfo("An error occurred during loading the data to MySQL table",e)
       }
   }
 }
