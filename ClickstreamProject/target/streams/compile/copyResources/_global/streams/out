@@ -1,0 +1,5 @@
+[0m[[0m[0mdebug[0m] [0m[0mCopy resource mappings: [0m
+[0m[[0m[0mdebug[0m] [0m[0m	(C:\ClickstreamProject\src\main\resources\clickstreamLocalConfig.conf,C:\ClickstreamProject\target\scala-2.11\classes\clickstreamLocalConfig.conf)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(C:\ClickstreamProject\src\main\resources\clickstreamProdConfig.conf,C:\ClickstreamProject\target\scala-2.11\classes\clickstreamProdConfig.conf)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(C:\ClickstreamProject\src\main\resources\clickstreamStageConfig.conf,C:\ClickstreamProject\target\scala-2.11\classes\clickstreamStageConfig.conf)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(C:\ClickstreamProject\src\main\resources\META-INF\MANIFEST.MF,C:\ClickstreamProject\target\scala-2.11\classes\META-INF\MANIFEST.MF)[0m

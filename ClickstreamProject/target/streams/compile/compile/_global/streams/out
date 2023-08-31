@@ -1,0 +1,10 @@
+[0m[[0m[33mwarn[0m] [0m[0mC:\ClickstreamProject\src\main\scala\service\FileReader.scala:6:16: imported `Logger' is permanently hidden by definition of object Logger in package service[0m
+[0m[[0m[33mwarn[0m] [0m[0mimport service.Logger[0m
+[0m[[0m[33mwarn[0m] [0m[0m               ^[0m
+[0m[[0m[33mwarn[0m] [0m[0mC:\ClickstreamProject\src\main\scala\service\FileWriter.scala:4:16: imported `DataPipeline' is permanently hidden by definition of object DataPipeline in package service[0m
+[0m[[0m[33mwarn[0m] [0m[0mimport service.DataPipeline[0m
+[0m[[0m[33mwarn[0m] [0m[0m               ^[0m
+[0m[[0m[33mwarn[0m] [0m[0mC:\ClickstreamProject\src\main\scala\service\FileWriter.scala:5:16: imported `Logger' is permanently hidden by definition of object Logger in package service[0m
+[0m[[0m[33mwarn[0m] [0m[0mimport service.Logger[0m
+[0m[[0m[33mwarn[0m] [0m[0m               ^[0m
+[0m[[0m[33mwarn[0m] [0m[0mthree warnings found[0m
